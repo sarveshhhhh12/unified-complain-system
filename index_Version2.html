@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Public Complaint System - India</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🔔 Public Complaint System - India</h1>
+            <p class="subtitle">Report Issues & Track Solutions Across India</p>
+        </header>
+
+        <!-- Admin Login Modal -->
+        <div id="adminLoginModal" class="modal">
+            <div class="modal-content">
+                <span class="close-modal" onclick="closeAdminLogin()">&times;</span>
+                <h2>🔐 Admin Login</h2>
+                <div class="form-group">
+                    <label for="adminPassword">Enter Admin Password:</label>
+                    <input type="password" id="adminPassword" placeholder="Enter password">
+                </div>
+                <button class="btn btn-primary" onclick="verifyAdminPassword()">🔓 Login</button>
+                <p class="password-hint">💡 Default Password: <strong>admin123</strong></p>
+            </div>
+        </div>
+
+        <!-- Admin Panel (Hidden by default) -->
+        <section class="section admin-section" id="adminPanel" style="display: none;">
+            <div class="admin-header">
+                <h2>🛠️ Admin Panel</h2>
+                <button class="btn btn-secondary" onclick="logoutAdmin()">🔒 Logout</button>
+            </div>
+            <p class="admin-subtitle">Manage & Update Complaint Status</p>
+            
+            <div class="admin-controls">
+                <button class="btn btn-info" id="exportBtn" onclick="exportData()">📊 Export Data</button>
+                <button class="btn btn-secondary" id="clearAllBtn" onclick="clearAllData()">🗑️ Clear All Data</button>
+            </div>
+
+            <div id="adminComplaints" class="complaints-list admin-list">
+                <p class="empty-message">No complaints to manage.</p>
+            </div>
+        </section>
+
+        <!-- Admin Access Button -->
+        <div class="admin-access-btn" id="adminAccessBtn">
+            <button class="btn btn-info" onclick="openAdminLogin()">🛠️ Admin Access</button>
+        </div>
+
+        <!-- User Side -->
+        <section class="section user-section">
+            <h2>📝 Submit Your Complaint</h2>
+            <form id="complaintForm">
+                <div class="form-group">
+                    <label for="name">Your Name:</label>
+                    <input type="text" id="name" placeholder="Enter your full name" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="email">Email Address:</label>
+                    <input type="email" id="email" placeholder="Enter your email" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="phone">Phone Number:</label>
+                    <input type="tel" id="phone" placeholder="Enter 10-digit number" maxlength="10" pattern="[0-9]{10}" required>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="state">State:</label>
+                        <select id="state" required>
+                            <option value="">-- Select State --</option>
+                            <option value="Andhra Pradesh">Andhra Pradesh</option>
+                            <option value="Arunachal Pradesh">Arunachal Pradesh</option>
+                            <option value="Assam">Assam</option>
+                            <option value="Bihar">Bihar</option>
+                            <option value="Chhattisgarh">Chhattisgarh</option>
+                            <option value="Goa">Goa</option>
+                            <option value="Gujarat">Gujarat</option>
+                            <option value="Haryana">Haryana</option>
+                            <option value="Himachal Pradesh">Himachal Pradesh</option>
+                            <option value="Jharkhand">Jharkhand</option>
+                            <option value="Karnataka">Karnataka</option>
+                            <option value="Kerala">Kerala</option>
+                            <option value="Madhya Pradesh">Madhya Pradesh</option>
+                            <option value="Maharashtra">Maharashtra</option>
+                            <option value="Manipur">Manipur</option>
+                            <option value="Meghalaya">Meghalaya</option>
+                            <option value="Mizoram">Mizoram</option>
+                            <option value="Nagaland">Nagaland</option>
+                            <option value="Odisha">Odisha</option>
+                            <option value="Punjab">Punjab</option>
+                            <option value="Rajasthan">Rajasthan</option>
+                            <option value="Sikkim">Sikkim</option>
+                            <option value="Tamil Nadu">Tamil Nadu</option>
+                            <option value="Telangana">Telangana</option>
+                            <option value="Tripura">Tripura</option>
+                            <option value="Uttar Pradesh">Uttar Pradesh</option>
+                            <option value="Uttarakhand">Uttarakhand</option>
+                            <option value="West Bengal">West Bengal</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="category">Category:</label>
+                        <select id="category" required>
+                            <option value="">-- Select Category --</option>
+                            <option value="Road">🛣️ Road</option>
+                            <option value="Water">💧 Water</option>
+                            <option value="Electricity">⚡ Electricity</option>
+                            <option value="Sanitation">🧹 Sanitation</option>
+                            <option value="Healthcare">🏥 Healthcare</option>
+                            <option value="Education">📚 Education</option>
+                            <option value="Public Transport">🚌 Public Transport</option>
+                            <option value="Corruption">⚖️ Corruption</option>
+                            <option value="Other">📋 Other</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="complaint">Your Complaint:</label>
+                    <textarea id="complaint" placeholder="Describe your complaint in detail..." rows="5" required></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="attachments">📎 Attach Evidence (Images/PDFs):</label>
+                    <input type="file" id="attachments" multiple accept="image/*,.pdf" class="file-input">
+                    <p class="file-hint">💡 Max 5 files, 5MB each (Images or PDFs)</p>
+                    <div id="filePreview" class="file-preview"></div>
+                </div>
+
+                <button type="submit" class="btn btn-primary">📤 Submit Complaint</button>
+            </form>
+        </section>
+
+        <!-- Complaints List - User View -->
+        <section class="section">
+            <h2>📋 Your Complaints</h2>
+            <div id="userComplaints" class="complaints-list">
+                <p class="empty-message">No complaints yet. Submit one above!</p>
+            </div>
+        </section>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
